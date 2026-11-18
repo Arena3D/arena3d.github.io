@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Arena 3D // System Loading</title>
+<title>Arena 3D // System Boot</title>
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="theme-color" content="#030712">
@@ -13,20 +13,20 @@
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
   body{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
     background:#030712;
     background-image: 
-      radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.12) 0%, transparent 60%),
-      linear-gradient(to bottom, rgba(3, 7, 18, 0.9), rgba(3, 7, 18, 0.95));
+      radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 70%),
+      linear-gradient(to bottom, rgba(3, 7, 18, 0.95), rgba(3, 7, 18, 0.99));
     color:#e2e8f0;font-family:"Courier New", Courier, monospace, system-ui, sans-serif;
     overflow:hidden;text-align:center;padding:20px;position:relative;
   }
 
-  /* Футуристическая сетка на фоне */
+  /* Фоновая сетка */
   body::before {
     content:"";position:absolute;inset:0;
-    background-image: linear-gradient(rgba(6,182,212,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
+    background-image: linear-gradient(rgba(6,182,212,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
     z-index:0;
     pointer-events:none;
   }
@@ -35,7 +35,7 @@
   body::after {
     content:"";position:absolute;top:0;left:0;right:0;height:2px;
     background: linear-gradient(90deg, transparent, #06b6d4, transparent);
-    animation: scanline 3s linear infinite;
+    animation: scanline 4s linear infinite;
     z-index:1;
     pointer-events:none;
   }
@@ -44,51 +44,75 @@
     100%{transform:translateY(105vh)}
   }
 
-  /* Цифровые частицы / искры */
+  /* Цифровые частицы */
   .p{position:absolute;bottom:-30px;background:#06b6d4;opacity:0;
-     box-shadow:0 0 8px #06b6d4;animation:rise linear infinite}
-  .p.coin{background:#38bdf8;border-radius:0;box-shadow:0 0 12px #38bdf8}
-  @keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.8}100%{transform:translateY(-110vh) scale(1);opacity:0}}
+     box-shadow:0 0 6px #06b6d4;animation:rise linear infinite}
+  @keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.6}100%{transform:translateY(-110vh) scale(1);opacity:0}}
 
-  .stage{position:relative;z-index:2;width:min(62vw,220px);aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+  .stage{position:relative;z-index:2;width:min(50vw,160px);aspect-ratio:1;display:flex;align-items:center;justify-content:center}
   
-  /* Голографический пьедестал */
   .ring{position:absolute;left:50%;bottom:5%;width:120%;height:30%;transform:translateX(-50%) rotateX(60deg);
-     border:2px dashed #06b6d4;border-radius:50%;box-shadow:0 0 20px rgba(6,182,212,0.4),inset 0 0 20px rgba(6,182,212,0.2);
+     border:2px dashed #06b6d4;border-radius:50%;box-shadow:0 0 15px rgba(6,182,212,0.3);
      animation:pulse 2s ease-in-out infinite}
-  @keyframes pulse{50%{box-shadow:0 0 35px rgba(6,182,212,0.8),inset 0 0 30px rgba(6,182,212,0.5);border-color:#38bdf8}}
+  @keyframes pulse{50%{box-shadow:0 0 30px rgba(6,182,212,0.7);border-color:#38bdf8}}
   
-  .orbit{position:absolute;left:50%;bottom:5%;width:120%;height:30%;transform:translateX(-50%) rotateX(60deg);animation:spin 4s linear infinite}
-  .orbit i{position:absolute;width:10px;height:10px;background:#38bdf8;box-shadow:0 0 10px #38bdf8}
-  .orbit i:nth-child(1){left:50%;top:-5px}.orbit i:nth-child(2){left:50%;bottom:-5px}
-  .orbit i:nth-child(3){left:-5px;top:50%}.orbit i:nth-child(4){right:-5px;top:50%}
-  @keyframes spin{to{transform:translateX(-50%) rotateX(60deg) rotate(360deg)}}
+  .hero{position:relative;z-index:3;width:70%;aspect-ratio:1;border-radius:10px;object-fit:cover;
+     border:2px solid #06b6d4;box-shadow:0 0 25px rgba(6,182,212,0.4);animation:float 2.5s ease-in-out infinite}
+  .emoji{font-size:64px;position:relative;z-index:3;animation:float 2.5s ease-in-out infinite;display:none;filter:drop-shadow(0 0 15px #06b6d4)}
+  @keyframes float{50%{transform:translateY(-10px)}}
+
+  .content-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+
+  h1{margin:0;font-size:clamp(28px,7vw,46px);letter-spacing:3px;line-height:1;
+     color:#f8fafc;text-shadow:0 0 10px rgba(6,182,212,0.8), 0 0 30px rgba(6,182,212,0.3)}
   
-  .hero{position:relative;z-index:3;width:70%;aspect-ratio:1;border-radius:12px;object-fit:cover;
-     border:2px solid #06b6d4;box-shadow:0 0 30px rgba(6,182,212,0.5);animation:float 2.5s ease-in-out infinite}
-  .emoji{font-size:80px;position:relative;z-index:3;animation:float 2.5s ease-in-out infinite;display:none;filter:drop-shadow(0 0 20px #06b6d4)}
-  @keyframes float{50%{transform:translateY(-12px)}}
+  .tag{color:#38bdf8;font-size:12px;margin:0 0 8px 0;letter-spacing:2px;text-transform:uppercase}
 
-  .content-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+  /* Блок инициализации в стиле Win11 / консоли */
+  .init-container{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    width:min(90vw,400px);min-height:110px;justify-content:center;
+    padding:8px;
+  }
 
-  h1{margin:0;font-size:clamp(32px,8vw,56px);letter-spacing:4px;line-height:1;
-     color:#f8fafc;text-shadow:0 0 10px rgba(6,182,212,0.8), 0 0 30px rgba(6,182,212,0.4), 0 0 50px rgba(6,182,212,0.2)}
-  
-  .tag{color:#38bdf8;font-size:14px;margin:0;letter-spacing:2px;text-transform:uppercase}
+  /* Строки инициализации с красивыми твинами */
+  .init-step {
+    font-size: 13px;
+    color: #475569;
+    letter-spacing: 1px;
+    text-transform: lowercase;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(8px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-  /* Футуристический прогресс-бар */
-  .bar-container{display:flex;flex-direction:column;align-items:center;gap:6px;width:min(82vw,360px)}
-  .bar-meta{display:flex;justify-content:space-between;width:100%;font-size:12px;color:#94a3b8;padding:0 2px;letter-spacing:1px}
-  .bar-meta span:last-child{color:#06b6d4;font-weight:bold}
-  
-  .bar{width:100%;height:10px;border-radius:2px;background:#0f172a;border:1px solid #1e293b;overflow:hidden;position:relative;box-shadow:inset 0 0 8px rgba(0,0,0,0.8)}
-  .bar b{display:block;height:100%;width:0;border-radius:1px;
-     background:linear-gradient(90deg,#0284c7,#06b6d4,#38bdf8);
-     box-shadow:0 0 12px #06b6d4;
-     animation:load 2.8s cubic-bezier(.4,0,.2,1) forwards}
-  @keyframes load{to{width:100%}}
+  /* Состояние: текущий активный шаг */
+  .init-step.active {
+    color: #38bdf8;
+    opacity: 1;
+    transform: translateY(0) scale(1.02);
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+  }
 
-  #msg{margin:0;font-size:14px;color:#94a3b8;letter-spacing:1px;text-transform:uppercase}
+  /* Состояние: прошлые шаги (меньше и прозрачнее) */
+  .init-step.done {
+    color: #94a3b8;
+    opacity: 0.35;
+    transform: translateY(-4px) scale(0.92);
+    font-size: 11px;
+  }
+
+  /* Индикатор загрузки (спиннер-точка для активного шага) */
+  .spinner {
+    width: 6px; height: 6px; border-radius: 50%; background: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8; display: inline-block;
+    animation: blink 0.8s infinite alternate;
+  }
+  @keyframes blink { from{opacity:0.2} to{opacity:1} }
 
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
 </style>
@@ -96,60 +120,84 @@
 <body>
 <div class="stage">
   <div class="ring"></div>
-  <div class="orbit"><i></i><i></i><i></i><i></i></div>
   <img class="hero" src="icon.png" alt="Arena 3D" onerror="this.style.display='none';document.querySelector('.emoji').style.display='block'">
   <div class="emoji">⚡</div>
 </div>
 
 <div class="content-wrap">
   <h1>ARENA 3D</h1>
-  <p class="tag" id="tag"></p>
+  <p class="tag">// MULTIPLAYER COMBAT SYSTEM</p>
   
-  <div class="bar-container">
-    <div class="bar-meta">
-      <span id="msg">INITIALIZING...</span>
-      <span id="percent">0%</span>
-    </div>
-    <div class="bar"><b></b></div>
-  </div>
+  <div class="init-container" id="initContainer"></div>
 </div>
 
 <script>
   var TARGET="https://fbiarabroblox-ai.github.io/Mygame/"+location.search+location.hash;
-  var L={
-    ru:{tag:"// MULTIPLAYER COMBAT SYSTEM",msg:"Загрузка арены…"},
-    en:{tag:"// MULTIPLAYER COMBAT SYSTEM",msg:"Loading arena…"},
-    et:{tag:"// MULTIPLAYER COMBAT SYSTEM",msg:"Arena laeb…"}
-  };
-  var lg=(navigator.language||"ru").slice(0,2);var t=L[lg]||L.en;
-  document.documentElement.lang=L[lg]?lg:"en";
-  document.getElementById("tag").textContent=t.tag;
-  document.getElementById("msg").textContent=t.msg;
 
-  // Плавный счетчик процентов от 0 до 100 за 2.8 секунд
-  var startTime = performance.now();
-  var duration = 2800;
-  var percentEl = document.getElementById("percent");
+  // Список шагов с распределением времени (app и engine грудятся дольше всего, логин — быстрее)
+  var steps = [
+    { text: "script initialization", duration: 350 },
+    { text: "engine initialization", duration: 750 },
+    { text: "map initialization", duration: 450 },
+    { text: "database initialization", duration: 400 },
+    { text: "auth initialization", duration: 300 },
+    { text: "logging in", duration: 200 },
+    { text: "reading account data", duration: 250 },
+    { text: "app initialization", duration: 900 }
+  ];
 
-  function updateProgress(currentTime) {
-    var elapsed = currentTime - startTime;
-    var progress = Math.min(Math.floor((elapsed / duration) * 100), 100);
-    percentEl.textContent = progress + "%";
-    if (progress < 100) {
-      requestAnimationFrame(updateProgress);
+  var container = document.getElementById("initContainer");
+  var stepElements = [];
+
+  // Создаем элементы для каждого шага
+  steps.forEach(function(step, index) {
+    var div = document.createElement("div");
+    div.className = "init-step";
+    div.innerHTML = '<span class="text">' + step.text + '</span>';
+    container.appendChild(div);
+    stepElements.push(div);
+  });
+
+  var currentStep = 0;
+
+  function runStep() {
+    if (currentStep > 0) {
+      // Предыдущий шаг становится "done" (маленький и прозрачный)
+      stepElements[currentStep - 1].classList.remove("active");
+      stepElements[currentStep - 1].classList.add("done");
+      var oldSpinner = stepElements[currentStep - 1].querySelector(".spinner");
+      if (oldSpinner) oldSpinner.remove();
+    }
+
+    if (currentStep < steps.length) {
+      // Текущий шаг становится активным
+      var el = stepElements[currentStep];
+      el.classList.add("active");
+      var spin = document.createElement("span");
+      spin.className = "spinner";
+      el.prepend(spin);
+
+      var delay = steps[currentStep].duration;
+      currentStep++;
+      setTimeout(runStep, delay);
+    } else {
+      // Все шаги завершены, небольшая пауза перед редиректом
+      setTimeout(function() {
+        location.replace(TARGET);
+      }, 300);
     }
   }
-  requestAnimationFrame(updateProgress);
 
-  // Цифровые элементы / искры на фоне
-  for(var i=0;i<20;i++){
-    var s=document.createElement("span");s.className="p"+(i%3===0?" coin":"");
-    var z=(i%3===0?4:2+Math.random()*4);
-    s.style.cssText="left:"+Math.random()*100+"%;width:"+z+"px;height:"+(z*(i%3===0?4:1))+"px;animation-duration:"+(3+Math.random()*4)+"s;animation-delay:"+(-Math.random()*5)+"s";
+  // Запуск цепочки инициализации
+  setTimeout(runStep, 150);
+
+  // Фоновые цифровые частицы
+  for(var i=0;i<15;i++){
+    var s=document.createElement("span");s.className="p";
+    var z=2+Math.random()*3;
+    s.style.cssText="left:"+Math.random()*100+"%;width:"+z+"px;height:"+(z*3)+"px;animation-duration:"+(3+Math.random()*3)+"s;animation-delay:"+(-Math.random()*4)+"s";
     document.body.appendChild(s);
   }
-  
-  setTimeout(function(){location.replace(TARGET)},2800);
 </script>
 </body>
 </html>
